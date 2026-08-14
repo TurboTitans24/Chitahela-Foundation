@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>Chitahela Foundation · Impact</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <!-- favicon -->
+  <link rel="icon" href="../rsc/logo.png" type="image/png" />
+  <link rel="shortcut icon" href="../rsc/logo.png" type="image/png" />
+  <style>
+    /* ----- CUSTOM PROPERTIES ----- */
+    :root {
+      --gold: #d4af37;
+      --gold-light: #e8c94a;
+      --gold-dark: #b38f2a;
+      --deep: #0b0a0a;
+      --dark-soft: #1a1717;
+      --charcoal: #2a2626;
+      --text-light: #f0ebe3;
+      --text-muted: #b8ad9e;
+      --shadow-gold: 0 8px 24px rgba(212, 175, 55, 0.25);
+      --transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ----- RESET ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--deep);
+      color: var(--text-light);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ----- BACKGROUND VIDEO ----- */
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+    #bg-video.hidden {
+      opacity: 0;
+    }
+
+    .video-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ----- HEADER ----- */
+    .foundation-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(11, 10, 10, 0.92);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: url('../rsc/logo.png') no-repeat center center/contain;
+      filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));
+    }
+    .brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+    .brand-name small {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: -4px;
+    }
+
+    .foundation-nav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .foundation-nav a {
+      display: inline-block;
+      padding: 12px 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      background: transparent;
+      transition: var(--transition);
+      text-decoration: none;
+      clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+      cursor: pointer;
+    }
+    .foundation-nav a:hover {
+      background: var(--gold);
+      color: var(--deep);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .foundation-nav a i {
+      margin-right: 8px;
+    }
+    .foundation-nav a.portal-link {
+      background: rgba(212, 175, 55, 0.04);
+      border-color: var(--gold-dark);
+    }
+
+    .hamburger-toggle {
+      display: none;
+      color: var(--gold);
+      font-size: 1.8rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .hamburger-toggle:hover {
+      color: var(--gold-light);
+      transform: rotate(90deg);
+    }
+
+    /* ----- HERO ----- */
+    .foundation-hero {
+      min-height: 100vh;
+      padding: 140px 20px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .foundation-content {
+      max-width: 1100px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .foundation-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.12);
+      padding: 8px 28px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+
+    .foundation-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 12vw, 5.6rem);
+      line-height: 1.1;
+      color: #fff;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.8);
+      margin-bottom: 18px;
+    }
+    .foundation-title span {
+      color: var(--gold);
+      display: inline-block;
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 4px;
+    }
+
+    .foundation-desc {
+      max-width: 640px;
+      margin: 18px auto 40px;
+      font-weight: 300;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      line-height: 1.7;
+      background: rgba(0,0,0,0.3);
+      padding: 18px 30px;
+      clip-path: polygon(2% 0%, 100% 0%, 98% 100%, 0% 100%);
+      backdrop-filter: blur(2px);
+    }
+    .foundation-desc i {
+      color: var(--gold);
+      margin: 0 6px;
+    }
+
+    /* ----- IMPACT SECTION ----- */
+    .impact-section {
+      margin-top: 50px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .impact-card {
+      background: rgba(26, 23, 23, 0.8);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      border-radius: 20px;
+      padding: 35px 25px;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      cursor: default;
+    }
+    .impact-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--gold);
+      box-shadow: var(--shadow-gold), 0 20px 40px rgba(0,0,0,0.7);
+    }
+    .impact-card .icon {
+      font-size: 3rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .impact-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .impact-card p {
+      color: var(--text-muted);
+      font-weight: 300;
+      font-size: 0.9rem;
+    }
+
+    /* ----- FOOTER ----- */
+    .foundation-footer {
+      background: rgba(10, 8, 7, 0.8);
+      backdrop-filter: blur(4px);
+      padding: 28px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(212, 175, 55, 0.1);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 2;
+    }
+    .foundation-footer i {
+      color: var(--gold);
+      margin: 0 6px;
+    }
+
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 768px) {
+      .foundation-nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 18px;
+        background: rgba(11, 10, 10, 0.98);
+        padding: 18px 0;
+        border-radius: 16px;
+        border: 1px solid rgba(212, 175, 55, 0.1);
+      }
+      .foundation-nav.active {
+        display: flex;
+      }
+      .foundation-nav a {
+        width: 100%;
+        text-align: center;
+        clip-path: none;
+        border-radius: 4px;
+        padding: 14px;
+      }
+      .hamburger-toggle {
+        display: block;
+      }
+      .foundation-header {
+        flex-wrap: wrap;
+      }
+      .impact-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .hamburger-toggle {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .foundation-header {
+        padding: 12px 16px;
+      }
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+      }
+      .brand-name {
+        font-size: 1.2rem;
+      }
+      .foundation-nav a {
+        padding: 6px 14px;
+        font-size: 0.55rem;
+        letter-spacing: 1px;
+      }
+      .foundation-desc {
+        font-size: 0.95rem;
+        padding: 14px 16px;
+      }
+      .impact-card {
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== BACKGROUND VIDEO ===== -->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="https://cdn.pixabay.com/video/2023/01/04/145320-786403437_large.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <div class="video-overlay"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="foundation-header">
+    <div class="brand-block">
+      <div class="brand-icon"></div>
+      <div class="brand-name">
+        Chitahela
+        <small>Foundation</small>
+      </div>
+    </div>
+    <div class="hamburger-toggle" id="hamburgerToggle" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </div>
+    <nav class="foundation-nav" id="foundationNav">
+      <a class="portal-link" id="portalLink">
+        <i class="fas fa-arrow-left"></i> Back to Portal
+      </a>
+    </nav>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="foundation-hero">
+    <div class="foundation-content">
+      <div class="foundation-badge"><i class="fas fa-seedling"></i> community · impact · ubuntu</div>
+      <h1 class="foundation-title">Chitahela <span>Foundation</span></h1>
+      <p class="foundation-desc">
+        <i class="fas fa-location-dot"></i> South Africa · ghetto roots · global soul <br />
+        <strong style="color: var(--gold);">Empowering communities through education, arts, and local development.</strong>
+      </p>
+
+      <div class="impact-section">
+        <div class="impact-card">
+          <div class="icon"><i class="fas fa-graduation-cap"></i></div>
+          <h3>Education</h3>
+          <p>Scholarships, after-school programs, and skills development for youth.</p>
+        </div>
+        <div class="impact-card">
+          <div class="icon"><i class="fas fa-palette"></i></div>
+          <h3>Arts & Culture</h3>
+          <p>Celebrating local talent through exhibitions, workshops, and creative spaces.</p>
+        </div>
+        <div class="impact-card">
+          <div class="icon"><i class="fas fa-people-group"></i></div>
+          <h3>Community</h3>
+          <p>Food drives, mentorship, and grassroots development initiatives.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="foundation-footer">
+    <p>
+      <i class="fas fa-heart" style="color: var(--gold);"></i>
+      Chitahela Foundation · 2026 · built with <i class="fas fa-mug-saucer"></i> in Mzansi
+      <br /><span style="opacity: 0.5; font-size: 0.7rem;">impact · education · arts · community</span>
+    </p>
+  </footer>
+
+  <!-- ===== JAVASCRIPT (external) ===== -->
+  <script src="../js/foundation.js" defer></script>
+</body>
+</html>
