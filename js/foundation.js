@@ -1,100 +1,70 @@
 (function() {
   "use strict";
 
-  // ---- MAIN VIDEO TOGGLE (pause/play) ----
-  const video = document.getElementById('bg-video');
-  let videoPlaying = true;
+  // ---- LOADER ----
+  const loader = document.getElementById('loader');
+  const progress = document.getElementById('loaderProgress');
+  const percentLabel = document.getElementById('loaderPercent');
+  let startTime = performance.now();
+  const DURATION = 5000;
 
-  // Create toggle button dynamically if it doesn't exist
-  let toggleBtn = document.getElementById('videoToggle');
-  if (!toggleBtn) {
-    toggleBtn = document.createElement('button');
-    toggleBtn.className = 'video-toggle';
-    toggleBtn.id = 'videoToggle';
-    toggleBtn.setAttribute('aria-label', 'Toggle background video');
-    toggleBtn.innerHTML = '<i class="fas fa-video" id="toggleIcon"></i> <span id="toggleLabel">Pause</span>';
-    document.body.appendChild(toggleBtn);
-
-    // Add styles for the toggle button (if not already in CSS)
-    const style = document.createElement('style');
-    style.textContent = `
-      .video-toggle {
-        position: fixed;
-        bottom: 30px;
-        left: 30px;
-        z-index: 999;
-        background: rgba(11, 10, 10, 0.75);
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        color: var(--gold);
-        padding: 12px 18px;
-        border-radius: 40px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 1px;
-        cursor: pointer;
-        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-      }
-      .video-toggle:hover {
-        background: var(--gold);
-        color: var(--deep);
-        transform: scale(1.05);
-        border-color: var(--gold);
-      }
-      .video-toggle i {
-        font-size: 1.1rem;
-      }
-      @media (max-width: 768px) {
-        .video-toggle {
-          bottom: 24px;
-          left: auto;
-          right: 20px;
-          padding: 10px 14px;
-          font-size: 0.65rem;
-          gap: 6px;
-          border-radius: 30px;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  const toggleIcon = document.getElementById('toggleIcon');
-  const toggleLabel = document.getElementById('toggleLabel');
-
-  function toggleVideo() {
-    if (videoPlaying) {
-      video.pause();
-      video.classList.add('hidden');
-      toggleIcon.className = 'fas fa-play';
-      toggleLabel.textContent = 'Play';
-      videoPlaying = false;
+  function updateLoader() {
+    const elapsed = performance.now() - startTime;
+    let pct = Math.min((elapsed / DURATION) * 100, 100);
+    if (progress) progress.style.width = pct + '%';
+    if (percentLabel) percentLabel.textContent = Math.floor(pct) + '%';
+    if (pct < 100) {
+      requestAnimationFrame(updateLoader);
     } else {
-      video.play().catch(() => {});
-      video.classList.remove('hidden');
-      toggleIcon.className = 'fas fa-video';
-      toggleLabel.textContent = 'Pause';
-      videoPlaying = true;
+      setTimeout(function() {
+        if (loader) loader.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        const loaderVideo = document.getElementById('loader-video');
+        if (loaderVideo) loaderVideo.pause();
+      }, 400);
     }
   }
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(updateLoader);
 
-  toggleBtn.addEventListener('click', toggleVideo);
+  // ---- THEME TOGGLE (Dark / Purple) ----
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  let currentTheme = 'dark';
 
-  // If video fails, still show toggle
-  video.addEventListener('error', function() {
-    video.classList.add('hidden');
-    toggleIcon.className = 'fas fa-play';
-    toggleLabel.textContent = 'Play';
-    videoPlaying = false;
-  });
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'purple');
+        if (themeIcon) themeIcon.className = 'fas fa-moon';
+        if (themeLabel) themeLabel.textContent = 'Purple';
+        currentTheme = 'purple';
+      } else if (currentTheme === 'purple') {
+        document.documentElement.removeAttribute('data-theme');
+        if (themeIcon) themeIcon.className = 'fas fa-moon';
+        if (themeLabel) themeLabel.textContent = 'Dark';
+        currentTheme = 'dark';
+      }
+    });
+  }
 
-  // ---- MOBILE NAV TOGGLE ----
+  // ---- MOTION LOGO ----
+  const logoSlides = document.querySelectorAll('.logo-slide');
+  let logoIndex = 0;
+
+  function rotateLogo() {
+    logoSlides.forEach(function(s) {
+      s.classList.remove('active');
+    });
+    logoIndex = (logoIndex + 1) % logoSlides.length;
+    logoSlides[logoIndex].classList.add('active');
+  }
+  if (logoSlides.length > 0) {
+    setInterval(rotateLogo, 3000);
+  }
+
+  // ---- MOBILE NAV ----
   const hamburger = document.getElementById('hamburgerToggle');
   const nav = document.getElementById('foundationNav');
   const icon = hamburger ? hamburger.querySelector('i') : null;
@@ -106,30 +76,84 @@
       icon.className = nav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
     });
 
-    document.querySelectorAll('.foundation-nav a').forEach(link => {
+    document.querySelectorAll('.foundation-nav a').forEach(function(link) {
       link.addEventListener('click', function() {
         nav.classList.remove('active');
-        icon.className = 'fas fa-bars';
+        if (icon) icon.className = 'fas fa-bars';
       });
     });
 
-    // Close nav on outside click
     document.addEventListener('click', function(e) {
       const header = document.querySelector('.foundation-header');
       if (!header.contains(e.target) && nav.classList.contains('active')) {
         nav.classList.remove('active');
-        icon.className = 'fas fa-bars';
+        if (icon) icon.className = 'fas fa-bars';
       }
     });
   }
 
-  // ---- NAV CLICK: BACK TO PORTAL ----
-  const portalLink = document.getElementById('portalLink');
-  if (portalLink) {
-    portalLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = '../index.html';
+  // ---- GALLERY ----
+  const galleryGrid = document.getElementById('galleryGrid');
+  const photoNames = [];
+  for (var i = 1; i <= 15; i++) {
+    photoNames.push('hela' + i + '.jpeg');
+  }
+
+  if (galleryGrid) {
+    photoNames.forEach(function(name, index) {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+
+      const img = document.createElement('img');
+      img.src = '../rsc/foundation/' + name;
+      img.alt = 'Foundation moment ' + (index + 1);
+      img.loading = 'lazy';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'gallery-overlay';
+      overlay.innerHTML = '<span><i class="fas fa-camera"></i>  ' + (index + 1) + '</span>';
+
+      item.appendChild(img);
+      item.appendChild(overlay);
+      galleryGrid.appendChild(item);
     });
+  }
+
+  // ---- SMOOTH SCROLL ----
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+      const target = this.getAttribute('href');
+      if (target === '#') return;
+      const element = document.querySelector(target);
+      if (element) {
+        e.preventDefault();
+        window.scrollTo({
+          top: element.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // ---- ENSURE VIDEOS PLAY ----
+  document.querySelectorAll('.impact-card video, #contact-video').forEach(function(video) {
+    video.play().catch(function() {});
+  });
+
+  // ---- CONTACT VIDEO VISIBILITY ----
+  const contactVideo = document.getElementById('contact-video');
+  const contactSection = document.getElementById('contact');
+
+  if (contactVideo && contactSection) {
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          contactVideo.play().catch(function() {});
+        }
+      });
+    }, { threshold: 0.3 });
+
+    observer.observe(contactSection);
   }
 
 })();
