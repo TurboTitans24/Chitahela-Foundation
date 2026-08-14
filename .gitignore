@@ -1,0 +1,25 @@
+# .gitignore
+.DS_Store
+Thumbs.db
+*.log
+node_modules/
+.vscode/
+.idea/
+*.tmp
+*.temp
+*.swp
+*.swo
+dist/
+build/
+.env
+*.mp4
+*.mov
+*.avi
+*.wmv
+*.flv
+*.mkv
+*.webm
+# Uncomment below if you want to exclude large video files (but keep them for production)
+# rsc/video.mp4
+# rsc/video4.mp4
+# rsc/foundation/*.mp4

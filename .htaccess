@@ -1,0 +1,20 @@
+RewriteEngine On
+
+# Remove .html extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [NC,L]
+
+# Clean URLs for specific pages
+RewriteRule ^foundation$ page-foundation/index.html [L]
+RewriteRule ^clothing$ page-clothing/index.html [L]
+RewriteRule ^clothing/collections$ page-clothing/collections/index.html [L]
+
+# Redirect /page-clothing/index.html → /clothing
+RewriteRule ^page-clothing/index\.html$ /clothing [R=301,L]
+RewriteRule ^page-foundation/index\.html$ /foundation [R=301,L]
+RewriteRule ^page-clothing/collections/index\.html$ /clothing/collections [R=301,L]
+
+# If the requested file exists as a directory, serve its index.html
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.*)/$ $1/index.html [L]
