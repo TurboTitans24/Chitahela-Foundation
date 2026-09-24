@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -788,6 +789,143 @@
             margin: 0 4px;
         }
 
+        /* ===== DONATION MODAL (NEW) ===== */
+        .donation-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .donation-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .donation-modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-accent);
+            border-radius: 20px;
+            padding: 40px 36px;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            box-shadow: var(--shadow);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            color: var(--text-primary);
+        }
+        .donation-modal.active .donation-modal-content {
+            transform: scale(1);
+        }
+        .donation-modal-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .donation-modal-content .donation-sub {
+            color: var(--text-secondary);
+            font-weight: 300;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-accent);
+            padding-bottom: 16px;
+        }
+        .donation-details {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .donation-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(179, 139, 255, 0.15);
+        }
+        .donation-row .label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            flex: 0 0 40%;
+        }
+        .donation-row .value {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            text-align: right;
+            flex: 1;
+            word-break: break-word;
+        }
+        .donation-row .value.highlight {
+            color: var(--accent);
+            font-size: 1.05rem;
+        }
+        .donation-modal .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            line-height: 1;
+            padding: 4px 8px;
+        }
+        .donation-modal .close-btn:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+        .donation-note {
+            background: rgba(179, 139, 255, 0.08);
+            border-left: 3px solid var(--accent);
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        .donation-note i {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+        .donation-modal .btn-gold {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: var(--bg-primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            text-align: center;
+            clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
+        }
+        .donation-modal .btn-gold:hover {
+            background: var(--accent-light);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(179, 139, 255, 0.3);
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 700px) {
             .impact-card {
@@ -808,6 +946,17 @@
                 min-height: 400px;
                 padding: 60px 20px;
             }
+            .donation-modal-content {
+                padding: 30px 22px;
+            }
+            .donation-row .label {
+                flex: 0 0 100%;
+                margin-bottom: 2px;
+            }
+            .donation-row .value {
+                text-align: left;
+                flex: 0 0 100%;
+            }
         }
         @media (max-width: 480px) {
             .gallery-grid {
@@ -826,6 +975,9 @@
             }
             .contact-grid {
                 grid-template-columns: 1fr;
+            }
+            .donation-modal-content h2 {
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -964,19 +1116,19 @@
                 <div class="icon-wrap"><i class="fas fa-hand-holding-usd"></i></div>
                 <h3>Donate</h3>
                 <p>Every rand counts. Support our programs and help us reach more communities in need.</p>
-                <a href="" class="btn-gold">Donate Now</a>
+                <a href="#" class="btn-gold" id="donateBtn">Donate Now</a>
             </div>
             <div class="involve-card">
                 <div class="icon-wrap"><i class="fas fa-users"></i></div>
                 <h3>Volunteer</h3>
                 <p>Share your time and skills. Join our team of dedicated volunteers making a tangible impact.</p>
-                <a href="#" class="btn-gold">Join Us</a>
+                <a href="#" class="btn-gold" id="volunteerBtn">Join Us</a>
             </div>
             <div class="involve-card">
                 <div class="icon-wrap"><i class="fas fa-handshake"></i></div>
                 <h3>Partner</h3>
                 <p>Collaborate with us. Together we can create sustainable change in our communities.</p>
-                <a href="#" class="btn-gold">Partner With Us</a>
+                <a href="#" class="btn-gold" id="partnerBtn">Partner With Us</a>
             </div>
         </div>
     </section>
@@ -1022,6 +1174,45 @@
             <br /><span style="opacity:0.5;font-size:0.7rem;">community · impact · Ubuntu</span>
         </p>
     </footer>
+
+    <!-- ===== DONATION MODAL (NEW) ===== -->
+    <div class="donation-modal" id="donationModal">
+        <div class="donation-modal-content">
+            <button class="close-btn" id="closeDonationModal" aria-label="Close">&times;</button>
+            <h2>Payment Details</h2>
+            <div class="donation-sub"><i class="fas fa-university"></i> Chitahela Foundation NPC</div>
+            <div class="donation-details">
+                <div class="donation-row">
+                    <span class="label">Account Type</span>
+                    <span class="value">Capitec Business Account</span>
+                </div>
+                <div class="donation-row">
+                    <span class="label">Account Name</span>
+                    <span class="value highlight">CHITAHELA FOUNDATION NPC</span>
+                </div>
+                <div class="donation-row">
+                    <span class="label">Account Number</span>
+                    <span class="value highlight">1054963029</span>
+                </div>
+                <div class="donation-row">
+                    <span class="label">Bank Name</span>
+                    <span class="value">Capitec Bank</span>
+                </div>
+                <div class="donation-row">
+                    <span class="label">Branch Name</span>
+                    <span class="value">Relationship Suite</span>
+                </div>
+                <div class="donation-row">
+                    <span class="label">Branch Code</span>
+                    <span class="value highlight">450105</span>
+                </div>
+            </div>
+            <div class="donation-note">
+                <i class="fas fa-info-circle"></i> Use your name as reference. Every contribution changes lives.
+            </div>
+            <button class="btn-gold" id="donationThanksBtn">Thank You</button>
+        </div>
+    </div>
 
     <!-- ===== JAVASCRIPT (external) ===== -->
     <script src="../js/foundation.js" defer></script>
