@@ -88,7 +88,19 @@
     { id: 15, title: 'Ladies Tracksuits', category: 'custom', price: 600, originalPrice: null, image: '../../rsc/ai4.png', badge: 'Women', images: ['../../rsc/ai4.png'] },
     { id: 16, title: 'Custom Hoodie', category: 'hoodies', price: 400, originalPrice: null, image: '../../rsc/ai5.png', badge: 'Custom', images: ['../../rsc/ai5.png'] },
     { id: 17, title: 'Modern Hoodie', category: 'hoodies', price: 400, originalPrice: null, image: '../../rsc/ai6.png', badge: 'Modern', images: ['../../rsc/ai6.png'] },
-    { id: 18, title: 'Chitahela Tracksuits', category: 'custom', price: 600, originalPrice: null, image: '../../rsc/ai7.png', badge: 'Premium', images: ['../../rsc/ai7.png'] }
+    { id: 18, title: 'Chitahela Tracksuits', category: 'custom', price: 600, originalPrice: null, image: '../../rsc/ai7.png', badge: 'Premium', images: ['../../rsc/ai7.png'] },
+
+    // ===== NEW PRODUCTS =====
+    // Gaza Nation T-Shirt — single image
+    { id: 19, title: 'Gaza Nation T-Shirt', category: 'tshirts', price: 400, originalPrice: null, image: '../../rsc/xitsonga1.png', badge: 'New', images: ['../../rsc/xitsonga1.png'] },
+    // Made In Venda T-Shirt — two images (auto-rotate + hover-swap)
+    { id: 20, title: 'Made In Venda T-Shirt', category: 'tshirts', price: 400, originalPrice: null, image: '../../rsc/venda1.png', badge: 'New', images: ['../../rsc/venda1.png', '../../rsc/venga2.jpeg'] },
+    // Xitsonga Hoodie — two images (auto-rotate + hover-swap)
+    { id: 21, title: 'Xitsonga Hoodie', category: 'hoodies', price: 500, originalPrice: null, image: '../../rsc/xitsonga1hoodie.png', badge: 'New', images: ['../../rsc/xitsonga1hoodie.png', '../../rsc/xitsonga2hoodie.png'] },
+    // Venda Bucket Hat — single image
+    { id: 22, title: 'Venda Bucket Hat', category: 'accessories', price: 150, originalPrice: null, image: '../../rsc/vendabuckethat.png', badge: 'New', images: ['../../rsc/vendabuckethat.png'] },
+    // Venda Cap — single image
+    { id: 23, title: 'Venda Cap', category: 'accessories', price: 200, originalPrice: null, image: '../../rsc/vendacap.png', badge: 'New', images: ['../../rsc/vendacap.png'] }
   ];
 
   // ===== RENDER PRODUCTS =====
@@ -109,9 +121,17 @@
           <span class="current-price">Custom Quote</span>
         </div>`;
       
+      // If the product has more than one image, render both a primary and secondary
+      // image stacked inside the container for smooth hover crossfade.
+      // The JS interval rotation still updates the primary `<img>` src.
+      const imageHTML = (product.images && product.images.length > 1)
+        ? `<img src="${product.images[0]}" alt="${product.title}" class="product-image primary" id="product-img-${index}">
+           <img src="${product.images[1]}" alt="${product.title} alternate view" class="product-image secondary" aria-hidden="true">`
+        : `<img src="${product.image}" alt="${product.title}" class="product-image" id="product-img-${index}">`;
+
       card.innerHTML = `
         <div class="product-image-container">
-          <img src="${product.image}" alt="${product.title}" class="product-image" id="product-img-${index}">
+          ${imageHTML}
           <div class="product-badge">${product.badge}</div>
           <button class="add-to-cart-btn" data-id="${product.id}" data-name="${product.title}" data-price="${product.price || 0}" data-image="${product.image}">
             <i class="fas fa-cart-plus"></i> Add to Cart
@@ -137,7 +157,7 @@
       
       productGrid.appendChild(card);
 
-      // Image rotation for products with multiple images
+      // Image rotation for products with multiple images (auto-swaps every 3s)
       if (product.images && product.images.length > 1) {
         const img = document.getElementById(`product-img-${index}`);
         if (img) {
